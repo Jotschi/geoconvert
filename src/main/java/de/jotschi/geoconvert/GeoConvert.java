@@ -490,4 +490,47 @@ public class GeoConvert {
 
 	}
 
+	public static String toMGRS(double lon, double lat) throws Exception {
+		
+		double[] xy = toUtm(lon, lat);
+		
+		String[][] eastings = {
+				{"S", "T", "U", "V", "W", "X", "Y", "Z"},
+				{"A", "B", "C", "D", "E", "F", "G", "H"},
+				{"J", "K", "L", "M", "N", "P", "Q", "R"}
+		};
+		
+		String [] northings = {"A", "B", "C", "D", "E", "F", "G",
+								"H", "J", "K", "L", "M", "N", "P",
+								"Q", "R", "S", "T", "U", "V"};
+		
+		int zone = (int) Math.floor((lon + 180.0) / 6) + 1;
+		boolean zoneIsEven = (zone % 2) == 0;
+		String band = getZoneBand(lat);
+		
+		String x = String.format("%6s", String.valueOf(Math.round(xy[0]))).replaceAll(" ", "0");
+		String y = String.format("%7s", String.valueOf(Math.round(xy[1]))).replaceAll(" ", "0");
+		
+		String easting = eastings[zone % 3][Integer.parseInt(x.substring(0,1)) - 1];
+		String northing = northings[((Integer.parseInt(y.substring(0,2))  + (zoneIsEven ? 5 : 0)) % 20)];
+		
+		return zone + band + " " + easting + northing + " " + x.substring(1,6) + " " + y.substring(2,7);
+	}
+
+	public static String getZoneBand(double lat) throws Exception {
+		
+		String [] bands = {"C", "D", "E", "F", "G", "H", "J",
+							"K", "L", "M", "N", "P", "Q", "R",
+							"S", "T", "U", "V", "W"};
+		
+		if(lat >= -80.0 && lat < 72.0) {
+			return bands[((int) lat + 80) / 8];
+		}
+		else if(lat >= 72.0 && lat < 84.0) {
+			return "X";
+		}
+		else
+			throw new Exception("Latitude must be between -80 and +84");
+	}
+
 }
