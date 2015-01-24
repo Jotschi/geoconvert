@@ -10,8 +10,6 @@ package de.jotschi.geoconvert;
  */
 public class GeoConvert {
 
-	static double pi = 3.14159265358979;
-
 	/* Ellipsoid model constants (actual values here are for WGS84) */
 	static double sm_a = 6378137.0;
 	static double sm_b = 6356752.314;
@@ -25,7 +23,7 @@ public class GeoConvert {
 	 * Converts degrees to radians.
 	 */
 	public static double DegToRad(double deg) {
-		return (deg / 180.0 * pi);
+		return (deg / 180.0 * Math.PI);
 	}
 
 	/*
@@ -34,7 +32,7 @@ public class GeoConvert {
 	 * Converts radians to degrees.
 	 */
 	public static double RadToDeg(double rad) {
-		return (rad / pi * 180.0);
+		return (rad / Math.PI * 180.0);
 	}
 
 	/*
